@@ -1,0 +1,55 @@
+.header {
+  background-color: #fff;
+  .header-top {
+    height: calc(9vh);
+    line-height: calc(9vh);
+    border-bottom: 1px solid #1890ff;
+    .user-detail {
+      padding: 0 20px;
+      text-align: right;
+      .userName {
+        margin-right: 40px;
+        font-size: 15px;
+      }
+      .quit {
+        font-size: 15px;
+      }
+    }
+  }
+  .header-bottom {
+    padding: 0 20px;
+    height: calc(7vh);
+    line-height: calc(7vh);
+    font-size: 18px;
+    .bread-crumb {
+      color: #1890ff;
+      margin-left: 60px;
+      &:after {
+        content: '';
+        position: absolute;
+        top: calc(7vh);
+        left: 64px;
+        border-top: 12px solid #fff;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+      }
+    }
+    .weather {
+      text-align: right;
+      .time {
+        margin-right: 30px;
+      }
+      .weather-detail {
+        float: right;
+        font-size: 15px;
+        min-width: 200px;
+        display: inline-block;
+        img {
+          height: 17px;
+        }
+        i {
+        }
+      }
+    }
+  }
+}
