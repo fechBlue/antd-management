@@ -6,7 +6,8 @@ import Axios from '../../api/axios'
 
 export default class Header extends Component {
   state = {
-    sysTime: ''
+    sysTime: '',
+    city: '杭州'
   };
 
   componentWillMount() {
@@ -20,9 +21,8 @@ export default class Header extends Component {
   }
 
   getWeatherData = () => {
-    const city = '杭州';
     Axios.jsonp({
-      url: 'http://api.map.baidu.com/telematics/v3/weather?location='+ encodeURIComponent(city) +'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
+      url: 'http://api.map.baidu.com/telematics/v3/weather?location='+ encodeURIComponent(this.state.city) +'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
     }).then((res) => {
       if (res.status === 'success') {
         let data = res.results[0].weather_data[0];
@@ -50,6 +50,7 @@ export default class Header extends Component {
           <Col span={12} className="weather">
             <span className="time">{this.state.sysTime}</span>
             <span className="weather-detail">
+              <i>{this.state.city}</i>
               <img src={this.state.weatherPic}/>
               <i>{this.state.weather}</i>
             </span>
