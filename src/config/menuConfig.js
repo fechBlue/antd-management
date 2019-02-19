@@ -21,7 +21,7 @@ const menuList = [
             },
             {
                 title:'通知提醒',
-                key:'/main/ui/notification',
+                key:'/main/ui/notifications',
             },
             {
                 title:'全局Message',
@@ -33,11 +33,7 @@ const menuList = [
             },
             {
                 title:'图片画廊',
-                key:'/main/ui/gallery',
-            },
-            {
-                title:'轮播图',
-                key:'/main/ui/carousel',
+                key:'/main/ui/gallerys',
             }
         ]
     },

@@ -25,7 +25,8 @@ export default class Modals extends Component {
       },
       onCancel(){
         console.log('cancel')
-      }
+      },
+      maskClosable: true
     })
   }
 
