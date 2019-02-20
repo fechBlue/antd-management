@@ -1,24 +1,32 @@
 import React, {Component} from 'react';
 import { Card, Table } from "antd";
-import axios from 'axios';
+import Axios from '../../api/axios';
 
 export default class BasicTable extends Component {
   state = {
     dataSource: [],
-    dataSource2: []
+    dataSource2: [],
+    selectedItems: [],
+    selectedRowKeys: []
   }
 
   componentWillMount() {
-    axios.get(' https://www.easy-mock.com/mock/5c6cc4eef8b1873e2776d892/management/table/list')
-      .then((res) => {
-        console.log(res.data)
-        if (res.data.code === 0 && res.data.result) {
-          this.setState({
-            dataSource2: res.data.result
-          })
-        }
+    Axios.ajax({
+      url: '/table/list',
+      method: 'get',
+      data: {
+        params: {
+          page: 1
+        },
+
+      }
+    }).then((res) => {
+        this.setState({
+          dataSource2: res
+        })
       })
     const dataSource = [{
+      key: '0',
       id: '0',
       userName: '张三',
       sex: '男',
@@ -34,7 +42,19 @@ export default class BasicTable extends Component {
     })
   }
 
+  onRowClick = (record) => {
+    let {selectedItems} = this.state;
+    let {selectedRowKeys} = this.state;
+    selectedItems.push(record);
+    selectedRowKeys.push(record.key);
+    this.setState({
+      selectedItems,
+      selectedRowKeys
+    })
+  }
+
   render () {
+    let {selectedRowKeys} = this.state;
     const columns = [
       {
         title: 'id',
@@ -49,22 +69,47 @@ export default class BasicTable extends Component {
       {
         title: '性别',
         dataIndex: 'sex',
-        key: 'sex'
+        key: 'sex',
+        render: (text) => {
+          return text === 1 ? '男' : '女'
+        }
       },
       {
         title: '状态',
         dataIndex: 'state',
-        key: 'state'
+        key: 'state',
+        render: (text) => {
+          let config = {
+            "1": '吃饭',
+            "2": '睡觉',
+            "3": '打豆豆',
+            "4": '打LOL',
+            "5": '陪女朋友'
+          }
+          return config[text]
+        }
       },
       {
         title: '爱好',
         dataIndex: 'hobby',
-        key: 'hobby'
+        key: 'hobby',
+        render: (text) => {
+          let config = {
+            "1": '打篮球',
+            "2": '画画',
+            "3": '读书',
+            "4": '写字'
+          }
+          return config[text]
+        }
       },
       {
         title: '是否已婚',
         dataIndex: 'married',
-        key: 'married'
+        key: 'married',
+        render: (text) => {
+          return text === 1 ? '已婚' : '未婚'
+        }
       },
       {
         title: '生日',
@@ -82,6 +127,10 @@ export default class BasicTable extends Component {
         key: 'time'
       }
     ]
+    let rowSelection = {
+      selectedRowKeys,
+      type: 'checkbox'
+    }
     return (
       <div>
         <Card title="基础表格" style={{marginBottom: 20}}>
@@ -92,12 +141,28 @@ export default class BasicTable extends Component {
             pagination={false}
           />
         </Card>
-        <Card title="Mock动态数据渲染表格">
+        <Card title="Mock动态数据渲染表格" style={{marginBottom: 20}}>
           <Table
             columns={columns}
             bordered
             dataSource={this.state.dataSource2}
             pagination={false}
+          />
+        </Card>
+        <Card title="Mock选中表格中的某列">
+          <Table
+            columns={columns}
+            bordered
+            dataSource={this.state.dataSource2}
+            pagination={false}
+            rowSelection={rowSelection}
+            onRow={(record, index) => {
+              return {
+                onClick: () => {
+                  this.onRowClick(record)
+                }
+              };
+            }}
           />
         </Card>
       </div> 
