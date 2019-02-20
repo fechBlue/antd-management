@@ -1,8 +1,34 @@
 import React, {Component} from 'react';
-import { Form, Card, Button, Icon, Input, message, Checkbox, Radio, InputNumber, Select, Switch } from 'antd'
+import { Col, Form, Card, Button, Icon, Input, message, Checkbox, Radio, InputNumber, Select, Switch, DatePicker, TimePicker, Upload } from 'antd'
+import moment from 'moment';
+import TextArea from 'antd/lib/input/TextArea';
+import './upload.less'
 
 class FormRegister extends Component {
-  
+
+  state = {
+    imageUrl: ''
+  }
+
+  getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+
+  handleChange = (info) => {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      this.getBase64(info.file.originFileObj, imageUrl => this.setState({
+        imageUrl,
+        loading: false,
+      }));
+    }
+  }
 
   render () {
     const {getFieldDecorator} = this.props.form;
@@ -16,7 +42,6 @@ class FormRegister extends Component {
         sm: 8
       }
     }
-    console.log({...formItemLayout})
     return (
       <div>
         <Card title="注册表单">
@@ -114,14 +139,62 @@ class FormRegister extends Component {
               </Form.Item>
               <Form.Item label="生日" {...formItemLayout}>
                 {
-                  getFieldDecorator('isMarried', {
-                    initialValue: true,
+                  getFieldDecorator('birthday', {
+                    initialValue: moment('2019-02-20'),
                   })(
-                    <Switch />
+                    <DatePicker />
+                  )
+                }
+              </Form.Item>
+              <Form.Item label="联系地址" {...formItemLayout}>
+                {
+                  getFieldDecorator('address', {
+                    initialValue: '浙江省杭州市滨江区',
+                  })(
+                    <TextArea autosize={{minRows: 3, maxRows: 5}}/>
+                  )
+                }
+              </Form.Item>
+              <Form.Item label="起床时间" {...formItemLayout}>
+                {
+                  getFieldDecorator('getUpTime')(
+                    <TimePicker />
+                  )
+                }
+              </Form.Item>
+              <Form.Item label="头像" {...formItemLayout}>
+                {
+                  getFieldDecorator('avatar', {
+                    rules: [{
+                      required: true
+                    }]
+                  })(
+                    <Upload
+                      name="avatar"
+                      listType="picture-card"
+                      className="avatar-uploader"
+                      showUploadList={false}
+                      action="//jsonplaceholder.typicode.com/posts/"
+                      onChange={this.handleChange}
+                    >
+                      {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : <Icon type="plus"/>}
+                    </Upload>
+                  )
+                }
+              </Form.Item>
+              <Form.Item label="" {...formItemLayout}>
+                <Col xs={24} sm={12}/>
+                {
+                  getFieldDecorator('rule', {
+                    valuePropName: 'checked',
+                    initialValue: true
+                  })(
+                    <Checkbox>我已阅读并同意<a href="javascript:;">安全游戏协议</a></Checkbox>
                   )
                 }
               </Form.Item>
               <Form.Item>
+                <Col xs={24} sm={4}/>
                 <Button type="primary">注册</Button>
               </Form.Item>
             </Form>

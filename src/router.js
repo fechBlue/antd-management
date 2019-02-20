@@ -13,6 +13,7 @@ import TabS from './pages/ui/tabs';
 import Gallerys from './pages/ui/gallery';
 import FormLogin from './pages/Form/login';
 import FormRegister from './pages/Form/register';
+import BasicTable from './pages/Table/basic';
 
 export default class Router extends Component {
   render () {
@@ -33,6 +34,7 @@ export default class Router extends Component {
                   <Route path="/main/ui/gallerys" component={Gallerys}/>
                   <Route path="/main/form/login" component={FormLogin}/>
                   <Route path="/main/form/reg" component={FormRegister}/>
+                  <Route path="/main/table/basic" component={BasicTable}/>
                   <Route component={NoMatch}/>
                 </Switch>
               </Main>
