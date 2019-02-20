@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/public/gallery
 /.pnp
 .pnp.js
 
