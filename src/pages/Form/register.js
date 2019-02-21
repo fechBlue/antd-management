@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Col, Form, Card, Button, Icon, Input, message, Checkbox, Radio, InputNumber, Select, Switch, DatePicker, TimePicker, Upload } from 'antd'
+import { Col, Form, Card, Button, Icon, Input, Checkbox, Radio, InputNumber, Select, Switch, DatePicker, TimePicker, Upload } from 'antd'
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
 import './upload.less'

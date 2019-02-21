@@ -34,15 +34,13 @@ export default class Axios {
         timeout: 5000,
         params: (options.data && options.data.params) || ''
       }).then((response) => {
-        setTimeout(() => {
-          if (options.data && options.data.showLoading !== false) {
-            let loading = document.getElementById('ajaxLoading');
-            loading.style.display = 'none';
-          }
-        }, 2000)
+        if (options.data && options.data.showLoading !== false) {
+          let loading = document.getElementById('ajaxLoading');
+          loading.style.display = 'none';
+        }
         if (response && response.status === 200) {
           if (response.data && response.data.code === 0) {
-            resolve(response.data.result)
+            resolve(response.data)
           }else {
             Modal.info({
               title: '提示',

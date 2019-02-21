@@ -1,30 +1,18 @@
 import React, {Component} from 'react';
-import { Card, Table } from "antd";
+import { Card, Table, Modal } from "antd";
 import Axios from '../../api/axios';
+import utils from '../../utils/utils';
 
 export default class BasicTable extends Component {
   state = {
     dataSource: [],
     dataSource2: [],
-    selectedItems: [],
-    selectedRowKeys: []
   }
 
-  componentWillMount() {
-    Axios.ajax({
-      url: '/table/list',
-      method: 'get',
-      data: {
-        params: {
-          page: 1
-        },
+  page = 1
 
-      }
-    }).then((res) => {
-        this.setState({
-          dataSource2: res
-        })
-      })
+  componentWillMount() {
+    this.request();
     const dataSource = [{
       key: '0',
       id: '0',
@@ -42,19 +30,46 @@ export default class BasicTable extends Component {
     })
   }
 
-  onRowClick = (record) => {
-    let {selectedItems} = this.state;
-    let {selectedRowKeys} = this.state;
-    selectedItems.push(record);
-    selectedRowKeys.push(record.key);
-    this.setState({
-      selectedItems,
-      selectedRowKeys
+  request = () => {
+    Axios.ajax({
+      url: '/table/list',
+      method: 'get',
+      data: {
+        params: {
+          page: this.page
+        },
+
+      }
+    }).then((res) => {
+      let _this = this;
+      this.setState({
+        dataSource2: res.result,
+        pagination: utils.page(res, (current) => {
+          _this.page = current;
+          _this.request()
+        })
+      });
     })
   }
 
+  onRowClick = (record) => {
+    this.setState({
+      selectedItems: record,
+      selectedRowKeys: [record.key]
+    })
+    Modal.info({
+      title: '提示',
+      content: `选择的id是${record.id}，姓名是${record.userName}`
+    })
+  }
+
+  onChange = (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  }
+
   render () {
-    let {selectedRowKeys} = this.state;
+    let {selectedRowKeys, selectedRowKeys2} = this.state;
+    console.log(this.state)
     const columns = [
       {
         title: 'id',
@@ -129,7 +144,12 @@ export default class BasicTable extends Component {
     ]
     let rowSelection = {
       selectedRowKeys,
-      type: 'checkbox'
+      type: 'radio'
+    }
+    let rowSelection2 = {
+      selectedRowKeys2,
+      type: 'checkbox',
+      onChange: this.onChange,
     }
     return (
       <div>
@@ -149,20 +169,37 @@ export default class BasicTable extends Component {
             pagination={false}
           />
         </Card>
-        <Card title="Mock选中表格中的某列">
+        <Card title="Mock-表格单选" style={{marginBottom: 20}}>
           <Table
             columns={columns}
             bordered
             dataSource={this.state.dataSource2}
             pagination={false}
             rowSelection={rowSelection}
-            onRow={(record, index) => {
+            onRow={(record) => {
               return {
                 onClick: () => {
                   this.onRowClick(record)
                 }
               };
             }}
+          />
+        </Card>
+        <Card title="Mock-表格多选" style={{marginBottom: 20}}>
+          <Table
+            columns={columns}
+            bordered
+            dataSource={this.state.dataSource2}
+            pagination={false}
+            rowSelection={rowSelection2}
+          />
+        </Card>
+        <Card title="Mock-表格分页" style={{marginBottom: 20}}>
+          <Table
+            columns={columns}
+            bordered
+            dataSource={this.state.dataSource2}
+            pagination={this.state.pagination}
           />
         </Card>
       </div> 

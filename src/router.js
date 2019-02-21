@@ -14,6 +14,8 @@ import Gallerys from './pages/ui/gallery';
 import FormLogin from './pages/Form/login';
 import FormRegister from './pages/Form/register';
 import BasicTable from './pages/Table/basic';
+import CityManage from './pages/CityManage';
+import Order from './pages/Order';
 
 export default class Router extends Component {
   render () {
@@ -35,6 +37,8 @@ export default class Router extends Component {
                   <Route path="/main/form/login" component={FormLogin}/>
                   <Route path="/main/form/reg" component={FormRegister}/>
                   <Route path="/main/table/basic" component={BasicTable}/>
+                  <Route path="/main/city" component={CityManage}/>
+                  <Route path="/main/order" component={Order}/>
                   <Route component={NoMatch}/>
                 </Switch>
               </Main>
