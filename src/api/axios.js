@@ -11,6 +11,7 @@ export default class Axios {
         if (err) {
           reject('请求失败，请重试！');
         }else {
+          console.log(response);
           if (response.status === 'success') {
             resolve(response);
           }else {
@@ -50,6 +51,15 @@ export default class Axios {
         }else {
           reject('接口请求失败')
         }
+      }).catch((err) =>{
+        if (options.data && options.data.showLoading !== false) {
+          let loading = document.getElementById('ajaxLoading');
+          loading.style.display = 'none';
+        }
+        Modal.error({
+          title: '连接失败',
+          content: err.message
+        })
       })
     })
   }

@@ -16,6 +16,8 @@ import FormRegister from './pages/Form/register';
 import BasicTable from './pages/Table/basic';
 import CityManage from './pages/CityManage';
 import Order from './pages/Order';
+import Common from './common';
+import OrderDetail from './pages/OrderDetail';
 
 export default class Router extends Component {
   render () {
@@ -42,6 +44,11 @@ export default class Router extends Component {
                   <Route component={NoMatch}/>
                 </Switch>
               </Main>
+            }/>
+            <Route path="/order" render={() => 
+              <Common>
+                <Route path="/order/detail/:orderId" component={OrderDetail}/>
+              </Common>
             }/>
             <Route render={() => 
               <div style={{textAlign: 'center', fontSize: 30, marginTop: 100}}>

@@ -41,6 +41,10 @@ class Order extends Component {
     })
   }
 
+  getOrderDetail = () => {
+    window.open('/#/order/detail/27018')
+  }
+
   render () {
     const columns = [
       {
@@ -98,7 +102,7 @@ class Order extends Component {
         <Card style={{marginBottom: 20}}>
           <FilterOrderForm />
         </Card>
-        <Card title={<div><Button type="primary" style={{marginRight: 20}}>订单详情</Button><Button type="primary">结束订单</Button></div>}>
+        <Card title={<div><Button type="primary" onClick={this.getOrderDetail} style={{marginRight: 20}}>订单详情</Button><Button type="primary">结束订单</Button></div>}>
           <Table
             bordered
             columns={columns}
