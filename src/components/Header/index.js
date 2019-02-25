@@ -11,7 +11,8 @@ export default class Header extends Component {
     city: '杭州'
   };
 
-  componentWillMount() {
+  componentDidMount() {
+    if (this.props.type === 'public') return;
     setInterval(() => {
       let sysTime = Utils.formateTime(new Date());
       this.setState({

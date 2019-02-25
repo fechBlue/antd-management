@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import './index.less';
-import { Form, Select, Card, Button, Modal, Radio, Table, message } from 'antd';
+import { Card, Button, Modal, Table, message } from 'antd';
 import Axios from '../../api/axios';
 import utils from '../../utils/utils';
+import BaseForm from '../../components/BaseForm';
 
 class CityManage extends Component {
   state = {
@@ -12,33 +13,16 @@ class CityManage extends Component {
 
   page = 1;
 
+  openCityForm = {};
+
+  filterCityForm = {};
+
   componentWillMount() {
     this.request();
   }
 
   request = () => {
-    Axios.ajax({
-      url: '/cityManagement',
-      method: 'get',
-      data: {
-        params: {
-          page: this.page
-        }
-      }
-    }).then((res) => {
-      let _this = this;
-      let dataSource = res.result.map((item) => {
-        item.key = item.cityId;
-        return item;
-      })
-      this.setState({
-        dataSource,
-        pagination: utils.page(res, (current) => {
-          _this.page = current;
-          _this.request()
-        })
-      });
-    })
+    Axios.requestList(this, '/cityManagement', 'get', {page: this.page})
   }
 
   openCity = () => {
@@ -48,7 +32,7 @@ class CityManage extends Component {
   }
 
   openCityOk = () => {
-    const city_info = this.openCityForm.props.form.getFieldsValue();
+    const city_info = this.openCityForm.getFieldsValue();
     Axios.ajax({
       url: '/cityAdd',
       method: 'get',
@@ -72,6 +56,10 @@ class CityManage extends Component {
     this.setState({
       visible: false
     })
+  }
+
+  handleSubmit = (formValue) => {
+    console.log(formValue)
   }
 
   render () {
@@ -123,10 +111,174 @@ class CityManage extends Component {
       }
     ]
     const {dataSource} = this.state;
+    const filterCityForm = {
+      layout: "inline",
+      haveSearch: true,
+      haveReset: true,
+      formList: [
+        {
+          type: 'SELECT',
+          label: '城市',
+          fieldId: 'city',
+          initialValue: '全部',
+          width: 90,
+          optionList: [
+            {
+              value: '全部',
+              name: '全部'
+            },
+            {
+              value: '北京',
+              name: '北京'
+            },
+            {
+              value: '上海',
+              name: '上海'
+            }
+          ]
+        },
+        {
+          type: 'SELECT',
+          label: '用车模式',
+          fieldId: 'useMode',
+          initialValue: '全部',
+          width: 140,
+          optionList: [
+            {
+              value: '全部',
+              name: '全部'
+            },
+            {
+              value: '指定停车点模式',
+              name: '指定停车点模式'
+            },
+            {
+              value: '禁停区模式',
+              name: '禁停区模式'
+            }
+          ]
+        },
+        {
+          type: 'SELECT',
+          label: '运营模式',
+          fieldId: 'operateMode',
+          initialValue: '全部',
+          width: 90,
+          optionList: [
+            {
+              value: '全部',
+              name: '全部'
+            },
+            {
+              value: '自营',
+              name: '自营'
+            },
+            {
+              value: '加盟',
+              name: '加盟'
+            }
+          ]
+        },
+        {
+          type: 'SELECT',
+          label: '加盟商授权状态',
+          fieldId: 'corperateState',
+          initialValue: '全部',
+          width: 90,
+          style: {
+            marginRight: 30
+          },
+          optionList: [
+            {
+              value: '全部',
+              name: '全部'
+            },
+            {
+              value: '已授权',
+              name: '已授权'
+            },
+            {
+              value: '未授权',
+              name: '未授权'
+            }
+          ]
+        },
+      ]
+    };
+    const openCityForm = {
+      layout: "horizontal",
+      haveSearch: false,
+      haveReset: false,
+      formItemLayout: {
+        labelCol: {
+          xs: 24,
+          sm: 5
+        },
+        wrapperCol: {
+          xs: 24,
+          sm: 19
+        }
+      },
+      formList: [
+        {
+          type: 'SELECT',
+          label: '选择城市',
+          fieldId: 'city',
+          initialValue: '全部',
+          width: 90,
+          optionList: [
+            {
+              value: '全部',
+              name: '全部'
+            },
+            {
+              value: '北京',
+              name: '北京'
+            },
+            {
+              value: '上海',
+              name: '上海'
+            }
+          ]
+        },
+        {
+          type: 'RADIO',
+          label: '运营模式',
+          initialValue: '自营',
+          fieldId: 'operateMode',
+          radioList: [
+            {
+              value: '自营',
+              name: '自营'
+            },
+            {
+              value: '加盟',
+              name: '加盟'
+            }
+          ]
+        },
+        {
+          type: 'RADIO',
+          label: '用车模式',
+          initialValue: '指定停车点模式',
+          fieldId: 'useMode',
+          radioList: [
+            {
+              value: '指定停车点模式',
+              name: '指定停车点模式'
+            },
+            {
+              value: '禁停区模式',
+              name: '禁停区模式'
+            }
+          ]
+        }
+      ]
+    };
     return (
       <div className="city-manage">
         <Card style={{marginBottom: 20}}>
-          <FilterCityForm />
+          <BaseForm formProps={filterCityForm} handleSubmit={(value) => {this.handleSubmit(value)}} reset={this.request} getForm={(form) => {this.filterCityForm = form}}/>
         </Card>
         <Card title={<Button type="primary" onClick={this.openCity}>开通城市</Button>}>
           <Modal
@@ -138,7 +290,7 @@ class CityManage extends Component {
             cancelText={'取消'}
             maskClosable={true}
           >
-            <OpenCityForm wrappedComponentRef={(element) => {this.openCityForm = element}}/>
+            <BaseForm formProps={openCityForm} getForm={(form) => {this.openCityForm = form}}/>
           </Modal>
           <Table
             bordered
@@ -151,132 +303,5 @@ class CityManage extends Component {
     )
   }
 }
-
-class FilterCity extends Component {
-  render () {
-    const {getFieldDecorator} = this.props.form;
-    return (
-      <Form layout="inline">
-        <Form.Item label="城市">
-          {
-            getFieldDecorator('city', {
-              initialValue: '全部'
-            })(
-              <Select style={{width:90}}>
-                <Select.Option value="全部">全部</Select.Option>
-                <Select.Option value="北京">北京</Select.Option>
-                <Select.Option value="上海">上海</Select.Option>
-              </Select>
-            )
-          }
-        </Form.Item>
-        <Form.Item label="用车模式">
-          {
-            getFieldDecorator('useMode', {
-              initialValue: '全部'
-            })(
-              <Select style={{width:140}}>
-                <Select.Option value="全部">全部</Select.Option>
-                <Select.Option value="指定停车点模式">指定停车点模式</Select.Option>
-                <Select.Option value="禁停区模式">禁停区模式</Select.Option>
-              </Select>
-            )
-          }
-        </Form.Item>
-        <Form.Item label="运营模式">
-          {
-            getFieldDecorator('operateMode', {
-              initialValue: '全部'
-            })(
-              <Select>
-                <Select.Option value="全部">全部</Select.Option>
-                <Select.Option value="自营">自营</Select.Option>
-                <Select.Option value="加盟">加盟</Select.Option>
-              </Select>
-            )
-          }
-        </Form.Item>
-        <Form.Item label="加盟商授权状态" style={{marginRight: 30}}>
-          {
-            getFieldDecorator('corperateState', {
-              initialValue: '全部'
-            })(
-              <Select style={{width: 90}}>
-                <Select.Option value="全部">全部</Select.Option>
-                <Select.Option value="已授权">已授权</Select.Option>
-                <Select.Option value="未授权">未授权</Select.Option>
-              </Select>
-            )
-          }
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary">查询</Button>
-        </Form.Item>
-        <Form.Item>
-          <Button>重置</Button>
-        </Form.Item>
-      </Form>
-    )
-  }
-}
-const FilterCityForm = Form.create()(FilterCity)
-
-class OpenCity extends Component {
-  render () {
-    const {getFieldDecorator} = this.props.form;
-    const formLayout = {
-      labelCol: {
-        xs: 24,
-        sm: 5
-      },
-      wrapperCol: {
-        xs: 24,
-        sm: 19
-      }
-    }
-    return (
-      <Form layout="horizontal">
-        <Form.Item label="选择城市" {...formLayout}>
-          {
-            getFieldDecorator('city', {
-              initialValue: '全部'
-            })(
-              <Select style={{width:120}}>
-                <Select.Option value="全部">全部</Select.Option>
-                <Select.Option value="北京市">北京市</Select.Option>
-                <Select.Option value="上海市">上海市</Select.Option>
-              </Select>
-            )
-          }
-        </Form.Item>
-        <Form.Item label="运营模式" {...formLayout}>
-          {
-            getFieldDecorator('operateMode', {
-              initialValue: '1'
-            })(
-              <Radio.Group>
-                <Radio value="1">自营</Radio>
-                <Radio value="2">加盟</Radio>
-              </Radio.Group>
-            )
-          }
-        </Form.Item>
-        <Form.Item label="用车模式" {...formLayout}>
-          {
-            getFieldDecorator('useMode', {
-              initialValue: '1'
-            })(
-              <Radio.Group>
-                <Radio value="1">指定停车点模式</Radio>
-                <Radio value="2">禁停区模式</Radio>
-              </Radio.Group>
-            )
-          }
-        </Form.Item>
-      </Form>
-    )
-  }
-}
-const OpenCityForm = Form.create()(OpenCity)
 
 export default CityManage

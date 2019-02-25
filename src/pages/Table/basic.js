@@ -64,6 +64,7 @@ export default class BasicTable extends Component {
   }
 
   onChange = (selectedRowKeys, selectedRows) => {
+    console.log(selectedRowKeys)
     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
   }
 
