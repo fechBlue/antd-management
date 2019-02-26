@@ -10,13 +10,6 @@ export default class ETable extends Component {
     this.setState({
       rowSelection: this.props.tableConfig.rowSelection
     });
-    if (this.state.rowSelection.type === 'checkbox') {
-      this.setState({
-        
-        rowSelection: this.props.tableConfig.rowSelection,
-        onChange: this.onChange
-      })
-    }
   }
 
   onRowClick = (record) => {
@@ -27,10 +20,6 @@ export default class ETable extends Component {
         selectedRowKeys: [record.key]
       }
     })
-  }
-
-  onChange = (selectedRowKeys, selectedRows) => {
-    this.props.rowChecked(selectedRowKeys, selectedRows)
   }
 
   render () {

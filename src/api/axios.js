@@ -5,7 +5,6 @@ import utils from '../utils/utils'
 
 export default class Axios {
   static requestList(_this, url, method, params) {
-    console.log(this)
     this.ajax({
       url,
       method,

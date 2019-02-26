@@ -25,14 +25,6 @@ class Order extends Component {
     window.open('/#/order/detail/27018')
   }
 
-  rowClick = (record) => {
-    console.log(record)
-  }
-
-  rowChecked = (selectedRowKeys, selectedRows) => {
-    console.log(selectedRowKeys, selectedRows)
-  }
-
   render () {
     const columns = [
       {
@@ -84,10 +76,6 @@ class Order extends Component {
     const rowSelection = {
       selectedRowKeys,
       type: 'radio'
-    }
-    let rowSelection2 = {
-      selectedRowKeys,
-      type: 'checkbox'
     }
     const orderForm = {
       layout: "inline",
@@ -160,12 +148,6 @@ class Order extends Component {
       pagination,
       rowSelection
     }
-    const tableConfig2 = {
-      columns,
-      dataSource,
-      pagination,
-      rowSelection: rowSelection2
-    }
     return (
       <div>
         <Card style={{marginBottom: 20}}>
@@ -173,7 +155,6 @@ class Order extends Component {
         </Card>
         <Card title={<div><Button type="primary" onClick={this.getOrderDetail} style={{marginRight: 20}}>订单详情</Button><Button type="primary">结束订单</Button></div>}>
           <ETable rowClick={this.rowClick} tableConfig={tableConfig}/>
-          <ETable rowChecked={this.rowChecked} tableConfig={tableConfig2}/>
         </Card>
       </div> 
     )

@@ -25,16 +25,17 @@ class BaseForm extends Component {
   render () {
     const { getFieldDecorator } = this.props.form;
     const layout = this.props.formProps.layout;
+    const footerNode = this.props.formProps.footerNode || '';
     const formList = this.props.formProps.formList;
-    const formItemLayout = this.props.formProps.formItemLayout ? this.props.formProps.formItemLayout : {}
+    const formItemLayout = this.props.formProps.formItemLayout || {};
     let formItem = [];
     formList.forEach((item, index) => {
       const label = item.label;
       const fieldId = item.fieldId;
       const initialValue = item.initialValue;
-      const rules = item.rules ? item.rules : [];
-      const width = item.width ? item.width : {};
-      const style = item.style ? item.style : {};
+      const rules = item.rules || [];
+      const width = item.width || {};
+      const style = item.style || {};
       switch (item.type) {
         case 'INPUT':
           const placeholder = item.placeholder;
@@ -44,10 +45,9 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
-                <Input type={type} style={{width: width}}/>
+                <Input type={type} style={{width: width}} placeholder={placeholder}/>
               )
             }
             </Form.Item>
@@ -59,10 +59,9 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
-                <InputNumber />
+                <InputNumber placeholder={placeholder}/>
               )
             }
             </Form.Item>
@@ -76,10 +75,9 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
-                <Select style={{width: width}} mode={mode}>
+                <Select style={{width: width}} mode={mode} placeholder={placeholder}>
                   {
                     optionList.map((item, index) => {
                       return <Option value={item.value} key={index}>{item.name}</Option>
@@ -98,7 +96,6 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: true,
-                placeholder: placeholder,
                 valuePropName: 'checked',
                 rules: rules
               })(
@@ -121,7 +118,6 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
                 <Radio.Group style={{width: width}}>
@@ -170,10 +166,9 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
-                <DatePicker />
+                <DatePicker placeholder={placeholder}/>
               )
             }
             </Form.Item>
@@ -185,10 +180,9 @@ class BaseForm extends Component {
             {
               getFieldDecorator(fieldId, {
                 initialValue: initialValue,
-                placeholder: placeholder,
                 rules: rules
               })(
-                <TextArea autosize={{minRows: 3, maxRows: 5}}/>
+                <TextArea autosize={{minRows: 3, maxRows: 5}} placeholder={placeholder}/>
               )
             }
             </Form.Item>
@@ -211,6 +205,7 @@ class BaseForm extends Component {
             <Button onClick={this.handleReset}>重置</Button>
           </FormItem>
         : ''}
+        {footerNode}
       </Form>
     )
   }

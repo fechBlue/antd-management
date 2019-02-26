@@ -18,6 +18,7 @@ import CityManage from './pages/CityManage';
 import Order from './pages/Order';
 import Common from './common';
 import OrderDetail from './pages/OrderDetail';
+import UserManagment from './pages/UserManagment';
 
 export default class Router extends Component {
   render () {
@@ -41,6 +42,7 @@ export default class Router extends Component {
                   <Route path="/main/table/basic" component={BasicTable}/>
                   <Route path="/main/city" component={CityManage}/>
                   <Route path="/main/order" component={Order}/>
+                  <Route path="/main/user" component={UserManagment}/>
                   <Route component={NoMatch}/>
                 </Switch>
               </Main>
